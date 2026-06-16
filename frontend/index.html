@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Computer Agent Control Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121214;
+            color: #e1e1e6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #1d1d22;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid #29292e;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+        .status-badge {
+            display: block;
+            text-align: center;
+            padding: 8px;
+            background: #29292e;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffb86c;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-share {
+            background-color: #04d361;
+            color: #000;
+        }
+
+        .btn-share:hover {
+            background-color: #02a94d;
+        }
+
+        .btn-stop {
+            background-color: #ff5555;
+            color: #fff;
+        }
+
+        .btn-stop:hover {
+            background-color: #e04444;
+        }
+
+        .log-panel {
+            background: #121214;
+            border: 1px solid #29292e;
+            border-radius: 6px;
+            height: 200px;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #8ff0a4;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            border-bottom: 1px solid #1c1c22;
+            padding-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🤖 Local AI Agent Control Desk</h1>
+        <div id="status" class="status-badge">AGENT STATE: IDLE (Waiting for Screen Share)</div>
+
+        <div class="btn-group">
+            <button class="btn-share" onclick="startAgent()">▶ Start Screen Share</button>
+            <button class="btn-stop" onclick="stopAgent()">🛑 EMERGENCY STOP</button>
+        </div>
+
+        <h3>📜 Action History & Activity Log</h3>
+        <div id="logs" class="log-panel">
+            <div class="log-entry">[System] UI Initialization complete. Waiting for user command...</div>
+        </div>
+    </div>
+
+    <script>
+        // Change the base URL to point directly to the local server
+        const BACKEND_BASE = "http://127.0.0.1:8000";
+
+        async function startAgent() {
+            document.getElementById("status").innerText = "AGENT STATE: ACTIVE (Sharing Screen)";
+            document.getElementById("status").style.color = "#04d361";
+            addLog("Screen sharing authorized. Initializing local AI vision tracking loop...");
+
+            try {
+                // Updated exact path query parameters string match
+                const response = await fetch(`${BACKEND_BASE}/api/task/start?task_prompt=Automate%20form%20entries`, {
+                    method: "POST"
+                });
+                const data = await response.json();
+                addLog(`Backend Response: ${data.status}`);
+            } catch (error) {
+                addLog(`Error connecting to backend: ${error.message}`);
+            }
+        }
+
+        async function stopAgent() {
+            document.getElementById("status").innerText = "AGENT STATE: STOPPED / PAUSED";
+            document.getElementById("status").style.color = "#ff5555";
+            addLog("EMERGENCY STOP TRIGGERED! All automated controls halted.");
+
+            try {
+                // Updated exact path string match
+                const response = await fetch(`${BACKEND_BASE}/api/task/stop`, { method: "POST" });
+                const data = await response.json();
+                addLog(`Backend Status: ${data.status}`);
+            } catch (error) {
+                addLog(`Error sending stop signal: ${error.message}`);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
